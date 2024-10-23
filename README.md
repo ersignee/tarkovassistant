@@ -2,6 +2,12 @@
     <img src="logo/Tarkov%20Assistant%20Logo.png" alt="Tarkov Assistant Logo" width="400"/>
 </p>
 
+![Version](https://img.shields.io/badge/version-0.15-blue.svg) 
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/ersignee/tarkovassistant/blob/main/LICENSE) 
+![Python](https://img.shields.io/badge/Python-3.8%20--%203.12-brightgreen.svg) 
+![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen) 
+[![Discord Server](https://img.shields.io/badge/Discord-7289DA?style=flat&logo=discord&logoColor=white)](https://discord.gg/Gy6QGmajjU)
+
 # Tarkov Assistant
 
 Tarkov Assistant is a helpful bot designed to enhance your experience in Escape from Tarkov with a variety of commands that ease your gameplay.
