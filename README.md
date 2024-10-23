@@ -10,7 +10,7 @@
 
 # Tarkov Assistant
 
-Tarkov Assistant is a helpful bot designed to enhance your experience in Escape from Tarkov with a variety of commands that ease your gameplay.
+Tarkov Assistant is a helpful Discord bot designed to enhance your experience in Escape from Tarkov with a variety of commands that ease your gameplay.
 
 ## 🔥・Features
 
