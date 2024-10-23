@@ -42,6 +42,8 @@ Tarkov Assistant is a helpful bot designed to enhance your experience in Escape 
 3. Press SHIFT+RIGHT-CLICK in the extracted folder and open CMD (it should open it by default in the script folder).
 4. Install the required pip modules:
    <pre>pip install -r requirements.txt</pre>
+5. Setup .env using:
+   <pre>API_TOKEN = 'YOUR_BOT_TOKEN'</pre>
 5. Run the bot using:
    <pre>python main.py</pre>
 
