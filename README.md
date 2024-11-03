@@ -26,6 +26,7 @@ Tarkov Assistant is a helpful Discord bot designed to enhance your experience in
 
 - `/ammo {name}` - Get round info (damage, speed, weight, modifiers).
 - `/item {name}` - Get item info (tier, flea price, vendor sell price, usage in tasks).
+- `/auto {image}` - Automatically scans items from an image and returns their price and the best vendor to sell them at.
 - `/boss {name}` - Get boss info (location, guards, loot, strategies).
 - `/serverstatus` - Check EFT server status.
 - `/tiers` - Information about the tier system.
@@ -52,7 +53,7 @@ Tarkov Assistant is a helpful Discord bot designed to enhance your experience in
 ## 🆕・Upcoming
 
 ```diff
-・/auto {image} - Recognize and search items given an image as input
+・?
 ```
 
 ---
