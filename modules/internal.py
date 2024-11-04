@@ -2,11 +2,12 @@
 import sys
 sys.dont_write_bytecode = True
 #imports
-import sqlite3
+from sqlite3 import connect
 from subprocess import run
 from requests import post
 from os import system, name
-import asyncio, json
+from json import dumps
+from asyncio import sleep as asyncsleep
 from PIL import Image, ImageEnhance
 from numpy import array
 from cv2 import cvtColor, COLOR_RGB2BGR, COLOR_BGR2GRAY, threshold, THRESH_BINARY
@@ -39,7 +40,7 @@ def updatedb_items(itemslist:list):
     
     #print("Updating Items Database")
     #opening a (new) database
-    connection = sqlite3.connect("databases/database.db")
+    connection = connect("databases/database.db")
     cursor = connection.cursor()
     #creating table
     cursor.execute('''CREATE TABLE IF NOT EXISTS items (
@@ -120,7 +121,7 @@ def updatedb_ammo(ammolist: list):
         raise TypeError("The 'ammolist' argument must be a list.")
 
     # Opening a (new) database
-    connection = sqlite3.connect("databases/database.db")
+    connection = connect("databases/database.db")
     cursor = connection.cursor()
     # Creating table
     cursor.execute('''CREATE TABLE IF NOT EXISTS ammo (
@@ -206,11 +207,11 @@ def updatedb_ammo(ammolist: list):
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             item.get("name", ""),
             item.get("shortName", ""),
-            json.dumps(item.get("types", [])),  # Convert list to JSON string
+            dumps(item.get("types", [])),  # Convert list to JSON string
             item.get("iconLink", ""),
             item.get("wikiLink", ""),
             item.get("updated", ""),
-            json.dumps(item.get("sellFor", [])),  # Convert list to JSON string
+            dumps(item.get("sellFor", [])),  # Convert list to JSON string
             int(item.get("tracer", 0)),  # Convert boolean to integer
             item.get("tracerColor", ""),
             item.get("damage", ""),
@@ -241,7 +242,7 @@ def getdb_item(itemname:str):
         raise TypeError("The 'itemname' argument must be a string.")
 
     #opening database
-    connection = sqlite3.connect("databases/database.db")
+    connection = connect("databases/database.db")
     cursor = connection.cursor()
     #getting wanted item
     cursor.execute("""SELECT * FROM items WHERE name = ?""",(itemname,))
@@ -255,7 +256,7 @@ def getdb_ammo(ammoname:str):
         raise TypeError("The 'ammoname' argument must be a string.")
 
     #opening database
-    connection = sqlite3.connect("databases/database.db")
+    connection = connect("databases/database.db")
     cursor = connection.cursor()
     #getting wanted item
     cursor.execute("""SELECT * FROM ammo WHERE name = ?""",(ammoname,))
@@ -269,7 +270,7 @@ def getdb_shortName(itemname:str):
         raise TypeError("The 'itemname' argument must be a string.")
     
     #opening database
-    connection = sqlite3.connect("databases/database.db")
+    connection = connect("databases/database.db")
     cursor = connection.cursor()
     #getting wanted item
     #cursor.execute("""SELECT * FROM items WHERE shortName = ?""",(itemname,))
@@ -365,5 +366,5 @@ async def updatedb(filename:str):
         #execute file
         run([sys.executable, filename])
         #sleep 10 minutes
-        await asyncio.sleep(600)
+        await asyncsleep(600)
     #print("[+] Updating Database")

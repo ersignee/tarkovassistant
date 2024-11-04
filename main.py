@@ -2,15 +2,15 @@
 import sys
 sys.dont_write_bytecode = True
 #imports
-from nextcord import Intents, Interaction, Attachment, Embed, TextInputStyle, ShardInfo, Activity, ActivityType, Status
+from nextcord import Intents, Interaction, Attachment, Embed, TextInputStyle
 from nextcord.ext import commands
 from nextcord.ui import Modal, TextInput
 from nextcord.errors import HTTPException, LoginFailure
-from os import getenv, system
+from os import getenv
 from dotenv import load_dotenv
 from time import sleep
 from datetime import datetime
-import asyncio
+from asyncio import sleep as asyncsleep
 #modules
 import modules.functions as functions
 import modules.informative as informative
@@ -70,10 +70,10 @@ async def on_disconnect():
     if all_shards_offline:
         print(dt_string + "All shards are offline. Restarting the bot...")
         await bot.close()
-        await asyncio.sleep(10)
+        await asyncsleep(10)
         await bot.start(TOKEN, reconnect=True)
         print(dt_string + "Restarted. Sleeping for 10 minute...")
-        await asyncio.sleep(600)
+        await asyncsleep(600)
         
 
 @bot.event
@@ -110,7 +110,7 @@ async def on_shard_disconnect(shard_id):
             now2 = datetime.now()
             dt_string2 = now2.strftime("[%d/%m - %H:%M:%S] ")
             print(dt_string2 + "Reconnected. Sleeping for 10 minutes...")
-            await asyncio.sleep(600)
+            await asyncsleep(600)
         elif not shard.is_ws_ratelimited():
             print(dt_string + f"Shard[{shard_id}] connection is not closed nor rate limited. Trying to reconnect()")
             await shard.disconnect()
@@ -118,7 +118,7 @@ async def on_shard_disconnect(shard_id):
             now2 = datetime.now()
             dt_string2 = now2.strftime("[%d/%m - %H:%M:%S] ")
             print(dt_string2 + "Reconnected. Sleeping for 10 minutes...")
-            await asyncio.sleep(600)
+            await asyncsleep(600)
     except Exception as e:
         print(dt_string + f"Error while reconnecting Shard[{shard_id}]:",e)
     #finally:

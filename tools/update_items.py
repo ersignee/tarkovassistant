@@ -1,7 +1,7 @@
-import requests
+from requests import post
 
 def search_items(query):
-    response = requests.post('https://api.tarkov.dev/graphql', json={'query': query})
+    response = post('https://api.tarkov.dev/graphql', json={'query': query})
     if response.status_code == 200:
         return response.json()
     else:
