@@ -64,6 +64,7 @@ Tarkov Assistant is a helpful Discord bot designed to enhance your experience in
 v0.15・23/10/2024
 ・New Boss: Partisan
 ・New items: All new 0.15 items and ammo
+・New Command: /auto {image} to automatically check item prices from an image
 Fixes:
 ・Bug that made the database update fail due to a change in type in the item queries, causing the bot to break.
 ```
