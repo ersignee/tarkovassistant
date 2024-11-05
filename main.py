@@ -262,5 +262,4 @@ def runBot():
     finally:
         exit()
 
-if __name__ == '__main__':
-    runBot()
+runBot()
