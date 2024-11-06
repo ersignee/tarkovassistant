@@ -7,153 +7,70 @@ def search_items(query):
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(response.status_code, query))
 
-#ammo - used for the command /ammo
-query1 = """
-query
-{
-    items(type: ammo) {
-        name
-        shortName
-    }
-}
-"""
+def update_file(filename:str, filelistname:str, inputlist:list[str]):
+    with open(filename, 'w', encoding='utf-8') as f:
+        for i, name in enumerate(all_ammo_list):
+            if i + 1 == len(all_ammo_list):
+                if "'" in name or '"' in name:
+                    f.write(f"'''{name}''']")
+                else:
+                    f.write(f"'{name}']")
+            elif i == 0:
+                if "'" in name or '"' in name:
+                    f.write(f"{filelistname} = ['''{name}''', ")
+                else:
+                    f.write(f"{filelistname} = ['{name}', ")
+            elif i % 2 == 0:
+                if "'" in name or '"' in name:
+                    f.write(f"'''{name}''', \n\t")
+                else:
+                    f.write(f"'{name}', \n\t")
+            else:
+                if ("'" in name or '"' in name):
+                    f.write(f"'''{name}''', ")
+                else:
+                    f.write(f"'{name}', ")
 
-#weapons
-query2 = """
-query
-{
-    items(type: gun) {
-        name
-    }
-}
-"""
+def formatquery(searchtype:str):
+    match searchtype:
+        case "ammo":
+            search = "type"
+            name = searchtype
+            getshortName = "shortName"
+        case "grenade":
+            search = "type"
+            name = searchtype
+            getshortName = ""
+        case "items":
+            search = "lang"
+            name = "en"
+            getshortName = "shortName"
+        case _:
+            return
+    query = """
+    query
+    {{
+        items({0}: {1}){{
+                name
+                {2}
+                }}
+    }}""".format(search, name, getshortName)
+    return query
 
-#grenades
-query3 = """
-query
-{
-    items(type: grenade) {
-        name
-    }
-}
-"""
-
-#all - used for the command /item (have to subtract ammo list from this)
-query4 = """
-query
-{
-  	items(lang: en){
-    		name
-  }
-}
-"""
-
-#all short names - used for the command /auto
-query5 = """
-query
-{
-  	items(lang: en){
-    		shortName
-  }
-}
-"""
-######### Retrive new Ammo #########
-
-all_ammo_list = []
-items_list = []
-all_short_names_list = []
-
-ammo = search_items(query1)
-ammo = ammo["data"]["items"]
-grenades = search_items(query3)
-grenades = grenades["data"]["items"]
-items = search_items(query4)
-items = items["data"]["items"]
-shortnames = search_items(query5)
-shortnames = shortnames["data"]["items"]
+# Call API for updated items list
+ammo = search_items(formatquery('ammo'))["data"]["items"]
+grenades = search_items(formatquery('grenade'))["data"]["items"]
+items = search_items(formatquery('items'))["data"]["items"]
 
 # Get items for the /ammo command and update the ammolist.py
-for amm0 in ammo:
-    if amm0 not in grenades:
-        all_ammo_list.append(amm0['name'])
+all_ammo_list = list({amm0['name'] for amm0 in ammo if amm0 not in grenades})
+update_file('./databases/ammolist.py', 'all_ammo_list', all_ammo_list)
 
-all_ammo_list = list( dict.fromkeys(all_ammo_list))
-counter = 0
-with open('./databases/ammolist.py', 'w', encoding='utf-8') as f:
-    for i, iteem in enumerate(all_ammo_list):
-        if i+1 == len(all_ammo_list):
-            f.write("'"+iteem+"']")
-        elif i+1 == len(all_ammo_list) and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''']")
-        elif i == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("all_ammo_list = ['"+iteem+"', ")
-        elif i == 0 and ("'" in iteem or '"' in iteem):
-            f.write("all_ammo_list = ['''"+iteem+"''', ")
-        elif i % 2 == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("'"+iteem+"', \n\t")
-        elif i % 2 == 0 and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''', \n\t")
-        else:
-            if ("'" in iteem or '"' in iteem):
-                f.write("'''"+iteem+"''', ")
-            else:
-                f.write("'"+iteem+"', ")
+# Get items for the /item command and update the itemslist.py
+items_list = list({itm['name'] for itm in items if itm not in all_ammo_list})
+update_file('./databases/itemslist.py', 'items_list', items_list)
 
-# Get items for the /ammo command and update the ammolist.py
-for itm in items:
-    if itm not in all_ammo_list:
-        items_list.append(itm['name'])
-
-items_list = list( dict.fromkeys(items_list))
-counter = 0
-with open('./databases/itemslist.py', 'w', encoding='utf-8') as f:
-    for i, iteem in enumerate(items_list):
-        if i+1 == len(items_list):
-            f.write("'"+iteem+"']")
-        elif i+1 == len(items_list) and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''']")
-        elif i == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("items_list = ['"+iteem+"', ")
-        elif i == 0 and ("'" in iteem or '"' in iteem):
-            f.write("items_list = ['''"+iteem+"''', ")
-        elif i % 2 == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("'"+iteem+"', \n\t")
-        elif i % 2 == 0 and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''', \n\t")
-        else:
-            if ("'" in iteem or '"' in iteem):
-                f.write("'''"+iteem+"''', ")
-            else:
-                f.write("'"+iteem+"', ")
-
-
-# Get items for the /ammo command and update the ammolist.py
-all_ammo_short_names = []
-for amm0short in ammo:
-    all_ammo_short_names.append(amm0short['shortName'])
-
-for shortname in shortnames:
-    if shortname['shortName'] not in all_ammo_short_names:
-        all_short_names_list.append(shortname['shortName'])
-
-all_short_names_list = list( dict.fromkeys(all_short_names_list))
-counter = 0
-with open('./databases/shortnameslist.py', 'w', encoding='utf-8') as f:
-    for i, iteem in enumerate(all_short_names_list):
-        if i+1 == len(all_short_names_list):
-            f.write("'"+iteem+"']")
-        elif i+1 == len(all_short_names_list) and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''']")
-        elif i == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("all_short_names_list = ['"+iteem+"', ")
-        elif i == 0 and ("'" in iteem or '"' in iteem):
-            f.write("all_short_names_list = ['''"+iteem+"''', ")
-        elif i % 2 == 0 and not ("'" in iteem or '"' in iteem):#
-            f.write("'"+iteem+"', \n\t")
-        elif i % 2 == 0 and ("'" in iteem or '"' in iteem):
-            f.write("'''"+iteem+"''', \n\t")
-        else:
-            if ("'" in iteem or '"' in iteem):
-                f.write("'''"+iteem+"''', ")
-            else:
-                f.write("'"+iteem+"', ")
+# Get items for the /auto command and update the shortnameslist.py
+all_ammo_short_names = [amm0short['shortName'] for amm0short in ammo]
+all_short_names_list = list({itm['shortName'] for itm in items if itm['shortName'] not in all_ammo_short_names})
+update_file('./databases/shortnameslist.py', 'all_short_names_list', all_short_names_list)
