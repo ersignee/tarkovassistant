@@ -21,7 +21,6 @@ async def help(interaction:Interaction):
     await interaction.followup.send(embed=embed)
 
 #patchnotes
-#patchnotes
 async def patchnotes(interaction:Interaction):
     await interaction.response.defer()
     embed = Embed(title="Patch 0.15.2.0", url="https://www.escapefromtarkov.com/news/id/315?lang=en", color=0x2f3136)
